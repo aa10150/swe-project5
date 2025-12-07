@@ -40,7 +40,7 @@ jobs:
 
       - name: Lint (pylint)
         run: |
-          pipenv run pylint app.py routes
+          pipenv run pylint __init__.py routes
 
       - name: Run tests with coverage
         run: |
