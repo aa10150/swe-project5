@@ -1,0 +1,15 @@
+[MASTER]
+ignore-patterns=^\..*$
+ignore=run.py
+
+[MESSAGES CONTROL]
+disable=
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    too-few-public-methods,
+    invalid-name,
+    broad-exception-caught
+
+[FORMAT]
+max-line-length=320

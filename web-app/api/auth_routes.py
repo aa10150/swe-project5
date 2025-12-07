@@ -1,12 +1,15 @@
-from flask import Blueprint, request, jsonify
-from api.user_model import create_user, verify_user
-import jwt
 import datetime
 import os
+
+import jwt
+from flask import Blueprint, jsonify, request
+
+from api.user_model import create_user, verify_user
 
 auth = Blueprint("auth", __name__)
 
 SECRET = os.getenv("JWT_SECRET", "defaultsecret")
+
 
 # -----------------------
 #   REGISTER
@@ -30,13 +33,12 @@ def register():
     # Remove password before sending response
     response_user = new_user.copy()
     response_user.pop("password", None)
-    response_user["_id"] = str(response_user["_id"])  
+    response_user["_id"] = str(response_user["_id"])
 
-    return jsonify({
-        "message": "User registered successfully",
-        "user": response_user
-    }), 201
-
+    return (
+        jsonify({"message": "User registered successfully", "user": response_user}),
+        201,
+    )
 
 
 # -----------------------
@@ -58,9 +60,13 @@ def login():
         return jsonify({"error": "Invalid credentials"}), 401
 
     # Create JWT
-    token = jwt.encode({
-        "email": user["email"],
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=6)
-    }, SECRET, algorithm="HS256")
+    token = jwt.encode(
+        {
+            "email": user["email"],
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=6),
+        },
+        SECRET,
+        algorithm="HS256",
+    )
 
     return jsonify({"token": token})
