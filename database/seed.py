@@ -2,7 +2,7 @@ import os
 from pymongo import MongoClient
 
 # Mongo connection (use your own URI, or default local)
-MONGO_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017/")
+MONGO_URI = os.getenv("MONGODB_URI", "mongodb://database:27017/nyu_cs_planner")
 DB_NAME = "nyu_cs_planner"
 
 client = MongoClient(MONGO_URI)
@@ -21,7 +21,7 @@ courses = [
         "category": "CS Foundation",
         "credits": 4,
         "difficulty": 2,
-        "prerequisites": []
+        "prerequisites": [],
     },
     {
         "course_code": "CSCI-UA.0101",
@@ -30,7 +30,7 @@ courses = [
         "category": "CS Requirement",
         "credits": 4,
         "difficulty": 2,
-        "prerequisites": ["CSCI-UA.0002"]
+        "prerequisites": ["CSCI-UA.0002"],
     },
     {
         "course_code": "CSCI-UA.0102",
@@ -39,7 +39,7 @@ courses = [
         "category": "CS Requirement",
         "credits": 4,
         "difficulty": 3,
-        "prerequisites": ["CSCI-UA.0101"]
+        "prerequisites": ["CSCI-UA.0101"],
     },
     {
         "course_code": "CSCI-UA.0201",
@@ -48,7 +48,7 @@ courses = [
         "category": "CS Requirement",
         "credits": 4,
         "difficulty": 3,
-        "prerequisites": ["CSCI-UA.0102"]
+        "prerequisites": ["CSCI-UA.0102"],
     },
     {
         "course_code": "CSCI-UA.0202",
@@ -57,7 +57,7 @@ courses = [
         "category": "CS Requirement",
         "credits": 4,
         "difficulty": 5,
-        "prerequisites": ["CSCI-UA.0201"]
+        "prerequisites": ["CSCI-UA.0201"],
     },
     {
         "course_code": "CSCI-UA.0310",
@@ -66,7 +66,7 @@ courses = [
         "category": "CS Requirement",
         "credits": 4,
         "difficulty": 4,
-        "prerequisites": ["CSCI-UA.0102"]
+        "prerequisites": ["CSCI-UA.0102"],
     },
     {
         "course_code": "CSCI-UA.0472",
@@ -75,7 +75,7 @@ courses = [
         "category": "CS Elective",
         "credits": 4,
         "difficulty": 4,
-        "prerequisites": ["CSCI-UA.0201", "CSCI-UA.0310"]
+        "prerequisites": ["CSCI-UA.0201", "CSCI-UA.0310"],
     },
     {
         "course_code": "CSCI-UA.0474",
@@ -84,8 +84,8 @@ courses = [
         "category": "CS Elective",
         "credits": 4,
         "difficulty": 3,
-        "prerequisites": ["CSCI-UA.0201"]
-    }
+        "prerequisites": ["CSCI-UA.0201"],
+    },
 ]
 
 # Insert courses
@@ -101,7 +101,7 @@ students = [
         "major": "Computer Science",
         "interests": ["AI", "Systems"],
         "completedCourses": [],
-        "plannedSemesters": []
+        "plannedSemesters": [],
     },
     {
         "netId": "student2",
@@ -110,8 +110,8 @@ students = [
         "major": "Computer Science",
         "interests": ["Software Engineering"],
         "completedCourses": ["CSCI-UA.0101"],
-        "plannedSemesters": []
-    }
+        "plannedSemesters": [],
+    },
 ]
 
 db.students.insert_many(students)

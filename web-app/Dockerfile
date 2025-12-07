@@ -16,4 +16,4 @@ COPY . .
 EXPOSE 5000
 
 # Run the Flask app
-CMD ["python", "seed.py"]
+CMD ["python", "run.py"]
