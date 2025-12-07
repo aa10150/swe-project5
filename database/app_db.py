@@ -9,11 +9,14 @@ Provides:
 """
 
 import os
+import bcrypt
 from dotenv import load_dotenv
 from pymongo import MongoClient
+from datetime import datetime
 
-# --- Load environment variables from .env in same folder ---
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+ENV_PATH = os.path.join(BASE_DIR, ".env")
+load_dotenv(ENV_PATH)
 
 MONGO_URI = os.getenv("MONGO_URI")
 DB_NAME = os.getenv("MONGO_DB_NAME")
@@ -323,11 +326,13 @@ COURSES = [
 ]
 
 
+
 STUDENTS = [
     {
         "name": "Freshman Overzealous",
         "netid": "fresh01",
         "email": "fresh01@example.edu",
+        "password": "test123",
         "year": "Freshman",
         "major": "Computer Science",
         "interests": ["AI", "Systems"],
@@ -338,6 +343,7 @@ STUDENTS = [
         "name": "Sophomore Balanced",
         "netid": "soph01",
         "email": "soph01@example.edu",
+        "password": "test123",
         "year": "Sophomore",
         "major": "Computer Science",
         "interests": ["Software Engineering"],
@@ -345,6 +351,13 @@ STUDENTS = [
         "planned_semesters": []
     }
 ]
+
+# Hash passwords for students before inserting into DB
+for student in STUDENTS:
+    plain_pw = student["password"].encode()
+    hashed_pw = bcrypt.hashpw(plain_pw, bcrypt.gensalt())
+    student["password"] = hashed_pw.decode()  # store as string
+
 
 def connect_db(uri=None, db_name=None):
     """Return db handle."""
