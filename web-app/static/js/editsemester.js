@@ -33,7 +33,7 @@ const saveBtn = document.getElementById("saveSemester");
 
 // --- Initialize semester title ---
 function setSemesterTitle() {
-  semesterTitle.textContent = `Editing: ${semesters[currentSemesterIndex]}`;
+  semesterTitle.textContent = `${semesters[currentSemesterIndex]}`;
 }
 setSemesterTitle();
 
