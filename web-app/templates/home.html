@@ -1,8 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}Welcome{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-<h1>Welcome to the nyu cs and math 4 year planner</h1>
+<section class="homepage">
+    <h2>Welcome to the NYU CS and Math 4-year Course Planner</h2>
+    <p>View your full 4-year plan so far or continue planning</p>
 
+    <div class="home-buttons">
+        <!-- View full plan button -->
+        <a href="fullplan.html" class="btn">View Full Plan</a>
+
+        <!-- Edit next semester button -->
+        <a href="editsemester.html" class="btn primary">Generate Next Semester</a>
+    </div>
+</section>
 {% endblock %}

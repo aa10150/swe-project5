@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NYU CS & Math Course Planner{% endblock %}</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <h1>NYU CS & Math Course Planner</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="fullplan.html">View Full Plan</a></li>
+                <li><a href="editsemester.html">Edit Semester</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main content area -->
+    <main>
+        {% block content %}
+        <!-- Page-specific content goes here -->
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy;Famous Amoses</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="courseplan.js"></script>
+    <script src="editsemester.js"></script>
+</body>
+</html>
