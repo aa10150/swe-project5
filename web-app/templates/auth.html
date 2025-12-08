@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login/Register - NYU CS & Math Course Planner</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .auth-container {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 350px;
+        text-align: center;
+      }
+      input {
+        width: 100%;
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      button {
+        background-color: #57068c;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+      button:hover {
+        background-color: #3a2366;
+      }
+      .switch-btn {
+        background: none;
+        border: none;
+        color: #57068c;
+        cursor: pointer;
+        text-decoration: underline;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+      }
+      .error {
+        color: red;
+        margin-top: 0.5rem;
+      }
+      .success {
+        color: green;
+        margin-top: 0.5rem;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-container">
+      <!-- Display messages -->
+      {% if error %}
+      <p class="error">{{ error }}</p>
+      {% endif %} {% if success %}
+      <p class="success">{{ success }}</p>
+      {% endif %}
+
+      <!-- Login Form -->
+      <div id="loginForm" {% if success %}class="hidden" {% endif %}>
+        <h2>Login</h2>
+        <form method="POST">
+          <input type="hidden" name="form_type" value="login" />
+          <input type="email" name="email" placeholder="Email" required />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <button type="submit">Login</button>
+        </form>
+        <button class="switch-btn" onclick="showRegister()">
+          Create an Account
+        </button>
+      </div>
+
+      <!-- Register Form -->
+      <div id="registerForm" {% if not success %}class="hidden" {% endif %}>
+        <h2>Register</h2>
+        <form method="POST">
+          <input type="hidden" name="form_type" value="register" />
+          <input type="text" name="name" placeholder="Full Name" required />
+          <input type="email" name="email" placeholder="Email" required />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <button type="submit">Register</button>
+        </form>
+        <button class="switch-btn" onclick="showLogin()">
+          Already have an account? Login
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function showRegister() {
+        document.getElementById("loginForm").classList.add("hidden");
+        document.getElementById("registerForm").classList.remove("hidden");
+      }
+      function showLogin() {
+        document.getElementById("registerForm").classList.add("hidden");
+        document.getElementById("loginForm").classList.remove("hidden");
+      }
+    </script>
+  </body>
+</html>

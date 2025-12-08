@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Semester{% endblock %}
+
+{% block content %}
+<section class="edit-semester">
+    <!-- Semester heading -->
+    <h2 id="semesterTitle"></h2>
+    <p>Generate course ideas and add courses manually</p>
+
+    <!-- Input form -->
+    <form id="semesterForm">
+        <div class="form-group">
+            <label for="careerPath">Intended Career Path</label>
+            <input type="text" id="careerPath" name="careerPath" placeholder="e.g. Software Engineering" required>
+        </div>
+
+        <div class="form-group">
+            <label for="sideInterest1">Side Interest 1 (optional)</label>
+            <input type="text" id="sideInterest1" name="sideInterest1" placeholder="e.g. Philosophy">
+        </div>
+
+        <div class="form-group">
+            <label for="sideInterest2">Side Interest 2 (optional)</label>
+            <input type="text" id="sideInterest2" name="sideInterest2" placeholder="e.g. Music">
+        </div>
+
+        <button type="button" id="generateCourses" class="btn primary">
+            Generate
+        </button>
+    </form>
+
+    <!-- Generated course ideas -->
+    <div id="courseIdeas" class="course-ideas">
+        <h3>Suggested Courses</h3>
+        <form id="courseSelectionForm">
+            <ul id="courseList">
+                <!-- JS will populate with course ideas -->
+                <!-- Example structure:
+                <li>
+                    <input type="checkbox" id="course1" name="courses" value="CSCI-UA 101 Introduction to Computer Science (4 credits)">
+                    <label for="course1">CSCI-UA 101 Introduction to Computer Science (4 credits)</label>
+                    <button type="button" class="replace-btn">Replace</button>
+                </li>
+                -->
+            </ul>
+        </form>
+    </div>
+
+    <!-- Manual course input -->
+    <div id="manualCourses" class="manual-courses">
+        <h3>Manually Add Courses</h3>
+        <form id="manualCourseForm">
+            <div class="form-group-inline">
+                <input type="text" id="manualCourseCode" name="manualCourseCode" placeholder="Course code" required>
+                <input type="text" id="manualCourseName" name="manualCourseName" placeholder="Course name" required>
+                <input type="number" id="manualCourseCredits" name="manualCourseCredits" placeholder="Credits" min="1" max="6" required>
+                <button type="button" id="addManualCourse" class="btn">Add</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Save button -->
+    <div class="save-section">
+        <button type="button" id="saveSemester" class="btn primary">
+            Save Semester Plan
+        </button>
+    </div>
+</section>
+{% endblock %}
