@@ -1,13 +1,10 @@
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, render_template 
+from flask import Flask, render_template
 
 from .auth_routes import auth
-
-# Relative import for auth_routes in the same folder
-from .auth_routes import auth
-
+from .recommendation_routes import recommendations
 
 # Load .env from the root of the project
 load_dotenv(os.path.join(os.path.dirname(__file__), "../.env"))
@@ -15,11 +12,13 @@ load_dotenv(os.path.join(os.path.dirname(__file__), "../.env"))
 
 app = Flask(__name__, template_folder="../templates", static_folder="../static")
 app.register_blueprint(auth, url_prefix="/auth")
+app.register_blueprint(recommendations, url_prefix="/api/recommendations")
 
 from flask import Flask, render_template, request, redirect, url_for, session
 from api.user_model import create_user, verify_user
 
 app.secret_key = "supersecret"  # needed for session management
+
 
 @app.route("/", methods=["GET", "POST"])
 def login_page():
@@ -29,11 +28,12 @@ def login_page():
         password = request.form.get("password")
         user = verify_user(email, password)
         if user:
-            session['user_email'] = user['email']
+            session["user_email"] = user["email"]
             return redirect(url_for("home"))
         else:
             error = "Invalid email or password"
     return render_template("login.html", error=error)
+
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup_page():  # this was register, now Sign In page
@@ -56,14 +56,16 @@ def signup_page():  # this was register, now Sign In page
 
 @app.route("/home")
 def home():
-    if 'user_email' not in session:
+    if "user_email" not in session:
         return redirect(url_for("login_page"))
-    return render_template("home.html", email=session['user_email'])
+    return render_template("home.html", email=session["user_email"])
 
-@app.route('/fullplan')
+
+@app.route("/fullplan")
 def fullplan():
-    return render_template('fullplan.html')
+    return render_template("fullplan.html")
 
-@app.route('/editsemester')
+
+@app.route("/editsemester")
 def editsemester():
-    return render_template('editsemester.html')
+    return render_template("editsemester.html")

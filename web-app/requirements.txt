@@ -13,3 +13,4 @@ python-dotenv
 PyJWT
 bcrypt
 mongomock
+openai>=1.0.0
