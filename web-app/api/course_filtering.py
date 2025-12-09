@@ -10,7 +10,7 @@ from typing import Dict, List, Optional
 
 from pymongo import MongoClient
 
-from api.major_requirements import get_math_course_info
+from api.major_requirements import get_math_course_info, is_math_course
 
 # Database connection (following pattern from user_model.py)
 MONGO_URI = os.getenv("MONGO_URI")
@@ -47,9 +47,7 @@ def filter_completed_courses(
     """
     completed_set = set(completed_codes)
     return [
-        course
-        for course in courses
-        if course.get("course_code") not in completed_set
+        course for course in courses if course.get("course_code") not in completed_set
     ]
 
 
@@ -87,3 +85,96 @@ def get_course_by_code(course_code: str, all_courses: List[Dict]) -> Optional[Di
 
     return None
 
+
+def check_prerequisites_met(
+    course: Dict, completed_courses: List[str], all_courses: List[Dict]
+) -> bool:
+    """
+    Verify that prerequisites for a course are satisfied.
+
+    Supports both AND and OR logic:
+    - Simple list: ["A", "B"] = OR logic (any one required) - backward compatible
+    - Object with logic: {"logic": "and", "courses": ["A", "B"]} = AND logic (all required)
+    - Object with logic: {"logic": "or", "courses": ["A", "B"]} = OR logic (any one required)
+
+    Args:
+        course: Course dictionary with 'prerequisites' field
+        completed_courses: List of course codes the student has completed
+        all_courses: List of all course dictionaries from database
+
+    Returns:
+        True if prerequisites are met, False otherwise
+    """
+    prerequisites = course.get("prerequisites", [])
+
+    # No prerequisites means requirement is met
+    if not prerequisites:
+        return True
+
+    completed_set = set(completed_courses)
+
+    # Handle different prerequisite structures
+    return _evaluate_prerequisites(prerequisites, completed_set, all_courses)
+
+
+def _evaluate_prerequisites(
+    prerequisites, completed_set: set, all_courses: List[Dict]
+) -> bool:
+    """
+    Evaluate prerequisites based on their structure.
+
+    Args:
+        prerequisites: Can be:
+            - List of strings: ["A", "B"] = OR logic (backward compatible)
+            - Dict with "logic" and "courses": {"logic": "and", "courses": ["A", "B"]}
+              or {"logic": "or", "courses": ["A", "B"]}
+        completed_set: Set of completed course codes
+        all_courses: List of all course dictionaries (for future use if needed)
+
+    Returns:
+        True if prerequisites are met
+    """
+    # Simple list = OR logic (backward compatible)
+    if isinstance(prerequisites, list):
+        # Check if any prerequisite is completed
+        return any(prereq_code in completed_set for prereq_code in prerequisites)
+
+    # Dictionary structure with explicit logic
+    if isinstance(prerequisites, dict):
+        if "logic" in prerequisites and "courses" in prerequisites:
+            logic = prerequisites["logic"].lower()
+            courses = prerequisites["courses"]
+
+            if logic == "and":
+                # All courses must be completed
+                return all(course_code in completed_set for course_code in courses)
+            elif logic == "or":
+                # Any course must be completed
+                return any(course_code in completed_set for course_code in courses)
+            else:
+                # Unknown logic, default to OR
+                return any(course_code in completed_set for course_code in courses)
+
+    # Unknown structure, default to False
+    return False
+
+
+def filter_by_prerequisites(
+    courses: List[Dict], completed_courses: List[str], all_courses: List[Dict]
+) -> List[Dict]:
+    """
+    Return only courses where all prerequisites are satisfied.
+
+    Args:
+        courses: List of course dictionaries to filter
+        completed_courses: List of course codes the student has completed
+        all_courses: List of all course dictionaries from database
+
+    Returns:
+        List of courses where prerequisites are met
+    """
+    return [
+        course
+        for course in courses
+        if check_prerequisites_met(course, completed_courses, all_courses)
+    ]
