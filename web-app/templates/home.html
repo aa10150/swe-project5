@@ -9,10 +9,10 @@
 
     <div class="home-buttons">
         <!-- View full plan button -->
-        <a href="fullplan.html" class="btn">View Full Plan</a>
+        <a href="{{ url_for('fullplan') }}" class="btn">View Full Plan</a>
 
         <!-- Edit next semester button -->
-        <a href="editsemester.html" class="btn primary">Generate Next Semester</a>
+        <a href="{{ url_for('editsemester') }}" class="btn primary">Generate First Semester</a>
     </div>
 </section>
 {% endblock %}

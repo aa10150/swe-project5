@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}NYU CS & Math Course Planner{% endblock %}</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   </head>
   <body>
     <!-- Header -->
@@ -16,11 +13,6 @@
         <h1>NYU CS & Math Course Planner</h1>
       </div>
       <nav>
-        <ul>
-          <li><a href="{{ url_for('home') }}">Home</a></li>
-          <li><a href="{{ url_for('fullplan') }}">View Full Plan</a></li>
-          <li><a href="{{ url_for('editsemester') }}">Edit Semester</a></li>
-        </ul>
       </nav>
     </header>
 
@@ -37,7 +29,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="courseplan.js"></script>
+    <script src="fullplan.js"></script>
     <script src="editsemester.js"></script>
   </body>
 </html>

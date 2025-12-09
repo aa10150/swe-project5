@@ -62,9 +62,11 @@
 
     <!-- Save button -->
     <div class="save-section">
-        <button type="button" id="saveSemester" class="btn primary">
-            Save Semester Plan
-        </button>
+        <a href="{{ url_for('fullplan') }}">
+            <button type="button" id="saveSemester" class="btn primary">
+                Save Semester Plan
+            </button>
+        </a>
     </div>
 </section>
 {% endblock %}
