@@ -13,7 +13,7 @@
             <ul class="course-list">
                 <!-- Courses will be populated by fullplan.js -->
             </ul>
-            <a href="{{ url_for('editsemester') }}">
+            <a href="{{ url_for('editsemester') }}?semester=0">
                 <button type="button" class="btn primary">
                     Edit Semester
                 </button>
@@ -23,7 +23,7 @@
         <div class="semester" id="freshman-spring">
             <h3>Freshman Spring</h3>
             <ul class="course-list"></ul>
-            <a href="{{ url_for('editsemester') }}">
+            <a href="{{ url_for('editsemester') }}?semester=1">
                 <button type="button" class="btn primary">
                     Edit Semester
                 </button>
@@ -33,7 +33,7 @@
         <div class="semester" id="sophomore-fall">
             <h3>Sophomore Fall</h3>
             <ul class="course-list"></ul>
-            <a href="{{ url_for('editsemester') }}">
+            <a href="{{ url_for('editsemester') }}?semester=2">
                 <button type="button" class="btn primary">
                     Edit Semester
                 </button>
@@ -43,7 +43,7 @@
         <div class="semester" id="sophomore-spring">
             <h3>Sophomore Spring</h3>
             <ul class="course-list"></ul>
-            <a href="{{ url_for('editsemester') }}">
+            <a href="{{ url_for('editsemester') }}?semester=3">
                 <button type="button" class="btn primary">
                     Edit Semester
                 </button>
@@ -53,7 +53,7 @@
         <div class="semester" id="junior-fall">
             <h3>Junior Fall</h3>
             <ul class="course-list"></ul>
-            <a href="{{ url_for('editsemester') }}">
+            <a href="{{ url_for('editsemester') }}?semester=4">
                 <button type="button" class="btn primary">
                     Edit Semester
                 </button>
@@ -63,7 +63,7 @@
         <div class="semester" id="junior-spring">
             <h3>Junior Spring</h3>
             <ul class="course-list"></ul>
-            <a href="{{ url_for('editsemester') }}">
+            <a href="{{ url_for('editsemester') }}?semester=5">
                 <button type="button" class="btn primary">
                     Edit Semester
                 </button>
@@ -73,7 +73,7 @@
         <div class="semester" id="senior-fall">
             <h3>Senior Fall</h3>
             <ul class="course-list"></ul>
-            <a href="{{ url_for('editsemester') }}">
+            <a href="{{ url_for('editsemester') }}?semester=6">
                 <button type="button" class="btn primary">
                     Edit Semester
                 </button>
@@ -83,7 +83,7 @@
         <div class="semester" id="senior-spring">
             <h3>Senior Spring</h3>
             <ul class="course-list"></ul>
-            <a href="{{ url_for('editsemester') }}">
+            <a href="{{ url_for('editsemester') }}?semester=7">
                 <button type="button" class="btn primary">
                     Edit Semester
                 </button>
@@ -91,4 +91,5 @@
         </div>
     </div>
 </section>
+<script src="{{ url_for('static', filename='js/fullplan.js') }}"></script>
 {% endblock %}
