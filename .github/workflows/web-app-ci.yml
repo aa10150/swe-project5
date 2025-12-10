@@ -51,7 +51,7 @@ jobs:
   build-and-push:
     needs: build-and-test-web-app
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request'
 
     steps:
       - name: Check out repository
@@ -89,7 +89,7 @@ jobs:
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request'
 
     steps:
       - name: Check out repository
