@@ -1,0 +1,40 @@
+name: Test API Subsystem
+
+on:
+  push:
+    paths:
+      - 'web-app/api/**'
+      - 'web-app/tests/test_plan_utils.py'
+      - 'web-app/tests/test_user_model.py'
+      - 'web-app/tests/test_smoke.py'
+  pull_request:
+    paths:
+      - 'web-app/api/**'
+      - 'web-app/tests/test_plan_utils.py'
+      - 'web-app/tests/test_user_model.py'
+      - 'web-app/tests/test_smoke.py'
+
+jobs:
+  test-api:
+    name: Run API tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f web-app/requirements.txt ]; then pip install -r web-app/requirements.txt; fi
+          pip install pytest pytest-cov mongomock
+
+      - name: Run API tests
+        working-directory: web-app
+        run: |
+          python -m pytest tests/test_user_model.py tests/test_plan_utils.py tests/test_smoke.py -q
