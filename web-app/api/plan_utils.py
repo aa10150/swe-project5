@@ -35,7 +35,7 @@ def parse_course_string(course_string: str) -> Optional[Dict]:
     if match:
         course_code = match.group(1)
         title = match.group(2).strip()
-        credits = int(match.group(3))
+        credit_hours = int(match.group(3))
 
         # Normalize course code format (handle spaces vs dots)
         course_code = course_code.replace(" ", ".")
@@ -43,7 +43,7 @@ def parse_course_string(course_string: str) -> Optional[Dict]:
         return {
             "course_code": course_code,
             "title": title,
-            "credits": credits,
+            "credits": credit_hours,
         }
 
     # Fallback: try simpler pattern if credits format is different
@@ -77,9 +77,9 @@ def format_course_string(course: Dict) -> str:
     """
     course_code = course.get("course_code", "UNKNOWN")
     title = course.get("title", course.get("name", "Unknown Course"))
-    credits = course.get("credits", 0)
+    credit_hours = course.get("credits", 0)
 
-    return f"{course_code} {title} ({credits} credits)"
+    return f"{course_code} {title} ({credit_hours} credits)"
 
 
 def update_semester_plan(

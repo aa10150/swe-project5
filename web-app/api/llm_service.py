@@ -34,8 +34,8 @@ def _build_system_message() -> str:
     Returns:
         System message string defining the role and context
     """
-    return """You are an expert academic advisor at NYU specializing in course planning and 
-curriculum design. Your role is to help students create balanced, strategic course schedules 
+    return """You are an expert academic advisor at NYU specializing in course planning and
+curriculum design. Your role is to help students create balanced, strategic course schedules
 that align with their academic goals, career aspirations, and major requirements.
 
 You understand:

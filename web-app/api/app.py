@@ -35,8 +35,7 @@ def login_page():
         if user:
             session["user_email"] = user["email"]
             return redirect(url_for("home"))
-        else:
-            error = "Invalid email or password"
+        error = "Invalid email or password"
     return render_template("login.html", error=error)
 
 

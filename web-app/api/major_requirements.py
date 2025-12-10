@@ -419,7 +419,6 @@ def get_remaining_requirements(
     if not major_reqs:
         return {"error": f"Major '{major_name}' not found", "major_name": major_name}
 
-    core_status = get_completed_core_requirements(major_reqs, completed_courses)
     elective_status = get_completed_electives(
         major_reqs, completed_courses, all_courses
     )
