@@ -9,7 +9,15 @@ A course recommender designed to help a Computer Science or Math student at NYU 
 [![Web App Subsystem CI](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-api-subsystem.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-api-subsystem.yml)
 [![Database Subsystem CI](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-database-subsystem.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-database-subsystem.yml)
 
-ADD: links to the container images for each custom subsystem, hosted on DockerHub
+## Container Images
+
+This project uses the following custom container images, hosted on Docker Hub:
+
+- Web application: [`jwn7470/web-app`](https://hub.docker.com/r/jwn7470/web-app)
+
+The application also depends on the official MongoDB image:
+
+- Database: [`mongo:7`](https://hub.docker.com/_/mongo)
 
 ## Team Members
 - **Frontend:** [Anshu Aramandla](https://github.com/aa10150)
