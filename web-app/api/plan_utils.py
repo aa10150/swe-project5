@@ -54,12 +54,12 @@ def parse_course_string(course_string: str) -> Optional[Dict]:
     if match_simple:
         course_code = match_simple.group(1).replace(" ", ".")
         title = match_simple.group(2).strip()
-        credits = int(match_simple.group(3)) if match_simple.group(3) else 4
+        credit_hours = int(match_simple.group(3)) if match_simple.group(3) else 4
 
         return {
             "course_code": course_code,
             "title": title,
-            "credits": credits,
+            "credits": credit_hours,
         }
 
     return None
