@@ -8,18 +8,19 @@ const semesters = [
 
 // Get semester index from query string
 const urlParams = new URLSearchParams(window.location.search);
-let currentSemesterIndex = parseInt(urlParams.get("semester")) || 0;
-
-// Temporary dummy data - course array with codes
-const dummyCourses = [
-  { code: "CSCI-UA 101", name: "Introduction to Computer Science", credits: 4 },
-  { code: "MATH-UA 121", name: "Calculus I", credits: 4 },
-  { code: "EXPOS-UA 1", name: "Writing the Essay", credits: 4 },
-  { code: "PSYCH-UA 1", name: "Foundations of Psychology", credits: 4 }
-];
+let currentSemesterIndex = parseInt(urlParams.get("semester"), 10);
+if (isNaN(currentSemesterIndex) || currentSemesterIndex < 0 || currentSemesterIndex >= semesters.length) {
+  currentSemesterIndex = 0;
+}
+// Initialize semester title
+document.addEventListener("DOMContentLoaded", () => {
+  const semesterTitle = document.getElementById("semesterTitle");
+  if (semesterTitle) {
+    semesterTitle.textContent = semesters[currentSemesterIndex];
+  }
+});
 
 // --- DOM references ---
-const semesterTitle = document.getElementById("semesterTitle");
 const careerPath = document.getElementById("careerPath");
 const sideInterest1 = document.getElementById("sideInterest1");
 const sideInterest2 = document.getElementById("sideInterest2");
@@ -31,43 +32,50 @@ const manualCourseName = document.getElementById("manualCourseName");
 const manualCourseCredits = document.getElementById("manualCourseCredits");
 const saveBtn = document.getElementById("saveSemester");
 
-// --- Initialize semester title ---
-function setSemesterTitle() {
-  semesterTitle.textContent = `${semesters[currentSemesterIndex]}`;
-}
-setSemesterTitle();
 
-// --- Generate course ideas (dummy data for now) ---
-function generateCourseIdeas() {
-  courseList.innerHTML = ""; // clear old list
-  dummyCourses.forEach((course, idx) => {
-    const li = document.createElement("li");
+// Generate course ideas
+async function generateCourseIdeas() {
+  courseList.innerHTML = "";
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.id = `course${idx}`;
-    checkbox.value = `${course.code} ${course.name} (${course.credits} credits)`;
+  const body = {
+    semester: semesters[currentSemesterIndex],
+    career_path: careerPath.value,
+    side_interests: [sideInterest1.value, sideInterest2.value].filter(Boolean)
+  };
 
-    const label = document.createElement("label");
-    label.htmlFor = checkbox.id;
-    label.textContent = `${course.code} ${course.name} (${course.credits} credits)`;
-
-    const replaceBtn = document.createElement("button");
-    replaceBtn.type = "button";
-    replaceBtn.textContent = "Replace";
-    replaceBtn.classList.add("replace-btn");
-    replaceBtn.addEventListener("click", () => {
-      // Replace with a new dummy course (for demo)
-      const newCourse = { code: `ALT-UA ${100 + idx}`, name: `Alternate Course ${idx + 1}`, credits: 3 };
-      label.textContent = `${newCourse.code} ${newCourse.name} (${newCourse.credits} credits)`;
-      checkbox.value = `${newCourse.code} ${newCourse.name} (${newCourse.credits} credits)`;
+  try {
+    const response = await fetch("/api/recommendations/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}` // assuming you store JWT
+      },
+      body: JSON.stringify(body)
     });
 
-    li.appendChild(checkbox);
-    li.appendChild(label);
-    li.appendChild(replaceBtn);
-    courseList.appendChild(li);
-  });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Failed to generate");
+
+    data.courses.forEach((course, idx) => {
+      const li = document.createElement("li");
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.id = `course${idx}`;
+      checkbox.value = `${course.course_code} ${course.title} (${course.credits} credits)`;
+
+      const label = document.createElement("label");
+      label.htmlFor = checkbox.id;
+      label.textContent = `${course.course_code} ${course.title} (${course.credits} credits)`;
+
+      li.appendChild(checkbox);
+      li.appendChild(label);
+      courseList.appendChild(li);
+    });
+  } catch (err) {
+    console.error(err);
+    alert("Error generating courses. Please try again.");
+  }
 }
 
 // --- Add manual course ---
