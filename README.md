@@ -6,11 +6,8 @@ An exercise to put to practice software development teamwork, subsystem communic
 A course recommender designed to help a Computer Science or Math student at NYU create a four-year plan by using an LLM to suggest courses from the CAS catalog that fulfill their requirements and classes relevant to their interests.
 
 [![log github events](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/event-logger.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/event-logger.yml)
-[![Web App CI](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/web-app-ci.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/web-app-ci.yml)
-
-Subsystems:
-[![Test API Subsystem](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-api-subsystem.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-api-subsystem.yml)
-[![Test Database Subsystem](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-database-subsystem.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-database-subsystem.yml)
+[![Web App Subsystem CI](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-api-subsystem.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-api-subsystem.yml)
+[![Database Subsystem CI](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-database-subsystem.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-database-subsystem.yml)
 
 ADD: links to the container images for each custom subsystem, hosted on DockerHub
 
