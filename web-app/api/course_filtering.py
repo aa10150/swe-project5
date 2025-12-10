@@ -177,9 +177,8 @@ def _evaluate_prerequisites(
             if logic == "or":
                 # Any course must be completed
                 return any(course_code in completed_set for course_code in courses)
-            else:
-                # Unknown logic, default to OR
-                return any(course_code in completed_set for course_code in courses)
+            # Unknown logic, default to OR
+            return any(course_code in completed_set for course_code in courses)
 
     # Unknown structure, default to False
     return False
