@@ -34,11 +34,11 @@ Create a file at `web-app/.env` by copying `web-app/.env.example` and filling in
 Example `web-app/.env` (copy into `web-app/.env` and edit):
 
 ```text
-MONGO_URI=mongodb://mongo:27017
-MONGO_DB_NAME=course_planner
-WAIT_BEFORE_CONNECT=2
-ENVIRONMENT=development
-FLASK_SECRET=supersecret
+MONGO_URI = mongodb://mongo:27017/course_planner
+MONGO_DB_NAME = course_planner
+ENVIRONMENT = development
+WAIT_BEFORE_CONNECT = 2
+OPENAI_API_KEY = sk-proj
 ```
 
 - `MONGO_URI`: MongoDB connection string. When using Docker Compose, `mongodb://mongo:27017` points to the `mongo` service in `docker-compose.yml`.
