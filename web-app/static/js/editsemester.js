@@ -29,7 +29,8 @@ let addManualBtn,
   manualCourseCode,
   manualCourseName,
   manualCourseCredits,
-  saveBtn;
+  saveBtn,
+  clearAllBtn;
 let searchTimeout = null;
 let selectedCourse = null;
 
@@ -54,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   manualCourseName = document.getElementById("manualCourseName");
   manualCourseCredits = document.getElementById("manualCourseCredits");
   saveBtn = document.getElementById("saveSemester");
+  clearAllBtn = document.getElementById("clearAllCourses");
 
   // Attach event listeners
   if (generateBtn) {
@@ -65,6 +67,12 @@ document.addEventListener("DOMContentLoaded", () => {
   if (saveBtn) {
     saveBtn.addEventListener("click", saveSemesterPlan);
   }
+  if (clearAllBtn) {
+    clearAllBtn.addEventListener("click", clearAllCourses);
+  }
+
+  // Load existing courses for this semester
+  loadExistingCourses();
 
   // Setup autocomplete for course search
   if (courseSearch) {
@@ -189,6 +197,9 @@ async function generateCourseIdeas() {
       li.appendChild(label);
       courseList.appendChild(li);
     });
+
+    // Show clear all button if there are courses
+    updateClearAllButtonVisibility();
   } catch (err) {
     console.error(err);
     courseList.innerHTML = `<li style="color: red;">Error: ${err.message}</li>`;
@@ -330,6 +341,155 @@ function addManualCourse() {
   // Clear inputs
   if (courseSearch) courseSearch.value = "";
   clearCourseFields();
+
+  // Show clear all button
+  updateClearAllButtonVisibility();
+}
+
+// --- Load existing courses for current semester ---
+async function loadExistingCourses() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return; // Not logged in, skip loading
+  }
+
+  try {
+    const response = await fetch("/api/plans/load", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        return; // Not authorized, skip
+      }
+      return; // Error loading, continue without existing courses
+    }
+
+    const data = await response.json();
+    const currentSemester = semesters[currentSemesterIndex];
+    const existingCourses = data[currentSemester] || [];
+
+    if (existingCourses.length > 0 && courseList) {
+      // Clear any loading message
+      courseList.innerHTML = "";
+
+      // Add existing courses to the list
+      existingCourses.forEach((courseString, idx) => {
+        const li = document.createElement("li");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = `existingCourse${idx}`;
+        checkbox.value = courseString;
+        checkbox.checked = true; // Existing courses are selected by default
+
+        const label = document.createElement("label");
+        label.htmlFor = checkbox.id;
+        label.textContent = courseString;
+
+        li.appendChild(checkbox);
+        li.appendChild(label);
+        courseList.appendChild(li);
+      });
+
+      // Show clear all button if courses were loaded
+      updateClearAllButtonVisibility();
+    }
+  } catch (err) {
+    console.error("Error loading existing courses:", err);
+    // Continue without existing courses
+  }
+}
+
+// --- Update clear all button visibility ---
+function updateClearAllButtonVisibility() {
+  if (!clearAllBtn || !courseList) return;
+
+  const checkboxes = courseList.querySelectorAll("input[type='checkbox']");
+  const hasCourses = checkboxes.length > 0;
+
+  if (hasCourses) {
+    clearAllBtn.style.display = "inline-block";
+  } else {
+    clearAllBtn.style.display = "none";
+  }
+}
+
+// --- Clear all courses from semester ---
+async function clearAllCourses() {
+  if (!courseList) {
+    alert("Error: Page elements not loaded. Please refresh the page.");
+    return;
+  }
+
+  // Confirm with user
+  const confirmed = confirm(
+    "Are you sure you want to delete all courses from this semester? This action cannot be undone."
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  // Check for token
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Please login first");
+    window.location.href = "/";
+    return;
+  }
+
+  // Show loading
+  if (clearAllBtn) clearAllBtn.disabled = true;
+  const originalText = clearAllBtn?.textContent;
+  if (clearAllBtn) clearAllBtn.textContent = "Clearing...";
+
+  try {
+    const response = await fetch("/api/plans/save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        semester: semesters[currentSemesterIndex],
+        courses: [], // Empty array to clear all courses
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        alert("Session expired. Please login again.");
+        localStorage.removeItem("token");
+        window.location.href = "/";
+        return;
+      }
+      throw new Error(data.error || "Failed to clear courses");
+    }
+
+    // Clear the course list from UI
+    if (courseList) {
+      courseList.innerHTML = "";
+    }
+
+    // Hide clear button
+    updateClearAllButtonVisibility();
+
+    alert("All courses cleared from this semester successfully!");
+  } catch (err) {
+    console.error(err);
+    alert(`Error clearing courses: ${err.message}`);
+  } finally {
+    if (clearAllBtn) {
+      clearAllBtn.disabled = false;
+      if (originalText) clearAllBtn.textContent = originalText;
+    }
+  }
 }
 
 // --- Save semester plan ---
@@ -354,10 +514,7 @@ async function saveSemesterPlan() {
     }
   });
 
-  if (selectedCourses.length === 0) {
-    alert("Please select at least one course to save.");
-    return;
-  }
+  // Allow saving with empty course list (will clear the semester plan)
 
   // Show loading
   if (saveBtn) saveBtn.disabled = true;

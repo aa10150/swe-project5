@@ -1,21 +1,111 @@
-{% extends "base.html" %}
-
-{% block title %}Home{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
 <!-- Logout button -->
 <a href="{{ url_for('login_page') }}" class="logout-btn">Logout</a>
 
 <section class="homepage">
-    <h2>Welcome to the NYU CS and Math 4-year Course Planner</h2>
-    <p>View your full 4-year plan so far or continue planning</p>
+  <h2>Welcome to the NYU CS and Math 4-year Course Planner</h2>
+  <p>View your full 4-year plan so far or continue planning</p>
 
-    <div class="home-buttons">
-        <!-- View full plan button -->
-        <a href="{{ url_for('fullplan') }}" class="btn">View Full Plan</a>
-
-        <!-- Edit first semester button -->
-        <a href="{{ url_for('editsemester') }}?semester=0" class="btn primary">Generate First Semester</a>
+  <!-- Major Selection -->
+  <div class="major-selection">
+    <h3>Select Your Major</h3>
+    <div class="major-options">
+      <label class="major-option">
+        <input
+          type="radio"
+          name="major"
+          value="Computer Science"
+          id="majorCS"
+        />
+        <span>Computer Science</span>
+      </label>
+      <label class="major-option">
+        <input type="radio" name="major" value="Mathematics" id="majorMath" />
+        <span>Mathematics</span>
+      </label>
     </div>
+    <button type="button" id="saveMajor" class="btn">Save Major</button>
+    <p id="majorStatus" class="status-message"></p>
+  </div>
+
+  <div class="home-buttons">
+    <!-- View full plan button -->
+    <a href="{{ url_for('fullplan') }}" class="btn">View Full Plan</a>
+
+    <!-- Edit next semester button -->
+    <a href="{{ url_for('editsemester') }}" class="btn primary"
+      >Generate First Semester</a
+    >
+  </div>
 </section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Load current major
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const response = await fetch("/api/user/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const major = data.major || "";
+          if (major === "Computer Science") {
+            document.getElementById("majorCS").checked = true;
+          } else if (major === "Mathematics") {
+            document.getElementById("majorMath").checked = true;
+          }
+        }
+      } catch (err) {
+        console.error("Error loading major:", err);
+      }
+    }
+
+    // Save major
+    document.getElementById("saveMajor").addEventListener("click", async () => {
+      const selectedMajor = document.querySelector(
+        'input[name="major"]:checked'
+      );
+      if (!selectedMajor) {
+        document.getElementById("majorStatus").textContent =
+          "Please select a major";
+        document.getElementById("majorStatus").style.color = "red";
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        document.getElementById("majorStatus").textContent =
+          "Please login first";
+        document.getElementById("majorStatus").style.color = "red";
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/user/profile", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ major: selectedMajor.value }),
+        });
+
+        if (response.ok) {
+          document.getElementById("majorStatus").textContent =
+            "Major saved successfully!";
+          document.getElementById("majorStatus").style.color = "green";
+        } else {
+          throw new Error("Failed to save major");
+        }
+      } catch (err) {
+        document.getElementById("majorStatus").textContent =
+          "Error saving major";
+        document.getElementById("majorStatus").style.color = "red";
+      }
+    });
+  });
+</script>
 {% endblock %}

@@ -242,6 +242,30 @@ footer {
   color: #333;
 }
 
+.course-ideas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.course-ideas-header h3 {
+  margin: 0;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
 .course-ideas ul,
 .course-list {
   list-style: none;
@@ -265,4 +289,64 @@ footer {
 .save-section {
   margin-top: 2rem;
   text-align: center;
+}
+
+/* Major selection styles */
+.major-selection {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 2rem auto;
+  max-width: 600px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.major-selection h3 {
+  margin-bottom: 1rem;
+  color: #57068c;
+}
+
+.major-options {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.major-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.major-option:hover {
+  border-color: #57068c;
+  background-color: #f5f5f5;
+}
+
+.major-option input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.major-option input[type="radio"]:checked + span {
+  font-weight: bold;
+  color: #57068c;
+}
+
+.major-option:has(input[type="radio"]:checked) {
+  border-color: #57068c;
+  background-color: #f0e6f7;
+}
+
+.status-message {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+  min-height: 1.5rem;
 }

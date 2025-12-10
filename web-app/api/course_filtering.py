@@ -119,7 +119,7 @@ def check_prerequisites_met(
     Verify that prerequisites for a course are satisfied.
 
     Supports both AND and OR logic:
-    - Simple list: ["A", "B"] = OR logic (any one required) - backward compatible
+    - Simple list: ["A", "B"] = AND logic (all required)
     - Object with logic: {"logic": "and", "courses": ["A", "B"]} = AND logic (all required)
     - Object with logic: {"logic": "or", "courses": ["A", "B"]} = OR logic (any one required)
 
@@ -151,7 +151,7 @@ def _evaluate_prerequisites(
 
     Args:
         prerequisites: Can be:
-            - List of strings: ["A", "B"] = OR logic (backward compatible)
+            - List of strings: ["A", "B"] = AND logic (all required)
             - Dict with "logic" and "courses": {"logic": "and", "courses": ["A", "B"]}
               or {"logic": "or", "courses": ["A", "B"]}
         completed_set: Set of completed course codes
@@ -160,10 +160,10 @@ def _evaluate_prerequisites(
     Returns:
         True if prerequisites are met
     """
-    # Simple list = OR logic (backward compatible)
+    # Simple list = AND logic (all prerequisites must be completed)
     if isinstance(prerequisites, list):
-        # Check if any prerequisite is completed
-        return any(prereq_code in completed_set for prereq_code in prerequisites)
+        # Check if ALL prerequisites are completed
+        return all(prereq_code in completed_set for prereq_code in prerequisites)
 
     # Dictionary structure with explicit logic
     if isinstance(prerequisites, dict):

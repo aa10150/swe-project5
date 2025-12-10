@@ -116,7 +116,7 @@ def _build_user_message(
     message = f"""Please recommend 4-6 courses for {student_name} for {semester_name}.
 
 STUDENT PROFILE:
-- Major: {major}
+- **MAJOR: {major}** (CRITICAL: All recommendations must align with this major)
 - Year: {year}
 - Career Path: {career_path if career_path else "Not specified"}
 - Interests: {", ".join(interests) if interests else "Not specified"}
@@ -171,30 +171,50 @@ STUDENT PROFILE:
     # Instructions section - REORDERED AND EMPHASIZED
     message += f"""
 CRITICAL RECOMMENDATION PRIORITIES (in order of importance):
-1. CAREER PATH ALIGNMENT (HIGHEST PRIORITY): 
-   The student's intended career path is: "{career_path if career_path else "Not specified"}"
-   Strongly prioritize courses that directly support this career path.
-   For example:
-   - If career path is "Software Engineering", prioritize: Software Engineering, Web Development, 
-     Database Design, Agile/DevOps, Applied Internet Technology, etc.
-   - If career path is "AI/ML" or "Machine Learning", prioritize: Predictive Analytics, 
-     Data Management, Big Data Processing, etc.
-   - If career path is "Data Science", prioritize: Database Design, Predictive Analytics, 
-     Data Management, Probability and Statistics, etc.
-   - If career path is "Systems", prioritize: Operating Systems, Computer Systems Organization, 
-     Theory of Computation, etc.
-   - If career path is "Cybersecurity", prioritize: Introduction to Cryptography, etc.
-   DO NOT recommend generic courses when career-specific courses are available.
+1. MAJOR ALIGNMENT (HIGHEST PRIORITY):
+   The student's major is: "{major}"
+   CRITICAL: Strongly prioritize courses that align with the student's declared major.
+   - If major is "Computer Science": Prioritize CS courses (CSCI-UA courses) that fulfill major requirements.
+     Focus on core CS requirements first, then CS electives that support the career path.
+   - If major is "Mathematics": Prioritize Math courses (MATH-UA courses) that fulfill major requirements.
+     Focus on core Math requirements first, then Math electives that support the career path.
+   - If major is not specified or "Undeclared": Still consider major requirements if available, but balance with other factors.
+   The student MUST complete their major requirements to graduate. Major alignment is more important than general interests.
+   NOTE: It is acceptable to include courses from other majors/departments (e.g., Math courses for CS majors, CS courses for Math majors)
+   when they directly support the student's interests or career path, AS LONG AS major requirements are still being prioritized and completed.
 
-2. SIDE INTERESTS (HIGH PRIORITY):
+2. CAREER PATH ALIGNMENT (HIGH PRIORITY): 
+   The student's intended career path is: "{career_path if career_path else "Not specified"}"
+   Within the context of the student's major, prioritize courses that directly support this career path.
+   For example:
+   - If career path is "Software Engineering" and major is CS: prioritize Software Engineering, Web Development, 
+     Database Design, Agile/DevOps, Applied Internet Technology, etc.
+   - If career path is "AI/ML" or "Machine Learning" and major is CS: prioritize Predictive Analytics, 
+     Data Management, Big Data Processing, Machine Learning, Deep Learning, etc.
+   - If career path is "Data Science" and major is CS: prioritize Database Design, Predictive Analytics, 
+     Data Management, Probability and Statistics, etc.
+   - If career path is "Systems" and major is CS: prioritize Operating Systems, Computer Systems Organization, 
+     Theory of Computation, etc.
+   - If career path is "Cybersecurity" and major is CS: prioritize Introduction to Cryptography, etc.
+   DO NOT recommend generic courses when career-specific courses within the major are available.
+
+3. SIDE INTERESTS (MEDIUM PRIORITY):
    The student has expressed interest in: {", ".join(side_interests) if side_interests else "none specified"}
    Include 1-2 courses that align with these side interests to create a well-rounded schedule.
-   This helps the student explore their interests while maintaining focus on their major.
+   IMPORTANT: If an interest requires courses from another major/department, DO NOT hesitate to recommend them.
+   For example:
+   - If interest is "Machine Learning" or "AI": Recommend relevant Math courses like Probability and Statistics (MATH-UA.0185),
+     Linear Algebra (MATH-UA.0140), or Theory of Probability (MATH-UA.0333) even if the student is a CS major.
+   - If interest is "Data Science": Recommend Math courses like Probability and Statistics, Linear Algebra, etc.
+   - If interest is "Cryptography": Recommend relevant Math courses that support cryptography.
+   - Cross-major courses that support interests are valuable and should be included when they directly support the interest.
+   However, ensure that major requirements are still being prioritized and completed. Balance is key:
+   prioritize major requirements first, but include cross-major courses when they directly support stated interests.
    If side interests are specified, make sure at least one recommended course connects to them.
 
-3. Major Requirements: Prioritize remaining core requirements if applicable
-4. Difficulty Balance: Mix easy (1-2), medium (3), and challenging (4-5) courses
-5. Course Sequencing: Ensure logical progression and prerequisite satisfaction
+4. Major Requirements: Prioritize remaining core requirements if applicable (already covered in priority #1)
+5. Difficulty Balance: Mix easy (1-2), medium (3), and challenging (4-5) courses
+6. Course Sequencing: Ensure logical progression and prerequisite satisfaction
 
 IMPORTANT CONSTRAINTS:
 - DO NOT recommend courses the student has already completed: {", ".join(completed_courses) if completed_courses else "None"}
