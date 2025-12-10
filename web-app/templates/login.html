@@ -101,7 +101,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "Login failed");
 
-    // ✅ Save JWT to localStorage
+    // Save JWT to localStorage
     localStorage.setItem("token", data.token);
 
     // Redirect to home
