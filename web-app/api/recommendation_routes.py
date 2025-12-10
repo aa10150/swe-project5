@@ -162,7 +162,7 @@ def generate_recommendations():
                 f"No available courses found for {semester}. "
                 f"Total courses in database: {total_courses}. "
                 f"Completed courses: {len(completed_courses)}, "
-                f"Planned courses for this semester: {len(current_semester_planned)}. " # pyright: ignore[reportUndefinedVariable]
+                f"Planned courses for this semester: {len(current_semester_planned)}. "  # pyright: ignore[reportUndefinedVariable]
             )
             if total_courses == 0:
                 error_msg += "Database appears to be empty. Please ensure the database is seeded."
