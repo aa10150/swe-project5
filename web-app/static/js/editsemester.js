@@ -66,6 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
     saveBtn.addEventListener("click", saveSemesterPlan);
   }
 
+  // Load existing courses for this semester
+  loadExistingCourses();
+
   // Setup autocomplete for course search
   if (courseSearch) {
     courseSearch.addEventListener("input", handleCourseSearch);
@@ -330,6 +333,61 @@ function addManualCourse() {
   // Clear inputs
   if (courseSearch) courseSearch.value = "";
   clearCourseFields();
+}
+
+// --- Load existing courses for current semester ---
+async function loadExistingCourses() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return; // Not logged in, skip loading
+  }
+
+  try {
+    const response = await fetch("/api/plans/load", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        return; // Not authorized, skip
+      }
+      return; // Error loading, continue without existing courses
+    }
+
+    const data = await response.json();
+    const currentSemester = semesters[currentSemesterIndex];
+    const existingCourses = data[currentSemester] || [];
+
+    if (existingCourses.length > 0 && courseList) {
+      // Clear any loading message
+      courseList.innerHTML = "";
+
+      // Add existing courses to the list
+      existingCourses.forEach((courseString, idx) => {
+        const li = document.createElement("li");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = `existingCourse${idx}`;
+        checkbox.value = courseString;
+        checkbox.checked = true; // Existing courses are selected by default
+
+        const label = document.createElement("label");
+        label.htmlFor = checkbox.id;
+        label.textContent = courseString;
+
+        li.appendChild(checkbox);
+        li.appendChild(label);
+        courseList.appendChild(li);
+      });
+    }
+  } catch (err) {
+    console.error("Error loading existing courses:", err);
+    // Continue without existing courses
+  }
 }
 
 // --- Save semester plan ---
