@@ -45,7 +45,17 @@ content %}
 
   <!-- Generated course ideas -->
   <div id="courseIdeas" class="course-ideas">
-    <h3>Suggested Courses</h3>
+    <div class="course-ideas-header">
+      <h3>Suggested Courses</h3>
+      <button
+        type="button"
+        id="clearAllCourses"
+        class="btn btn-danger"
+        style="display: none"
+      >
+        Clear All Courses
+      </button>
+    </div>
     <form id="courseSelectionForm">
       <ul id="courseList">
         <!-- JS will populate with course ideas -->
