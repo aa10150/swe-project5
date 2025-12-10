@@ -8,8 +8,7 @@ import json
 import os
 from typing import Dict, List, Optional
 
-from openai import OpenAI # pyright: ignore[reportMissingImports]
-
+from openai import OpenAI  # pyright: ignore[reportMissingImports]
 
 
 # Initialize OpenAI client
