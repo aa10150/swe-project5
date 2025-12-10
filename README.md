@@ -14,7 +14,7 @@ A course recommender designed to help a Computer Science or Math student at NYU 
 
 This project uses the following custom container images, hosted on Docker Hub:
 
-- Web application: [`jwn7470/web-app`](https://hub.docker.com/r/jwn7470/web-app)
+- Web application: [`apoorvib/web-app`](https://hub.docker.com/r/apoorvib/web-app)
 
 The application also depends on the official MongoDB image:
 
