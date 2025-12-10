@@ -8,6 +8,9 @@ A course recommender designed to help a Computer Science or Math student at NYU 
 [![log github events](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/event-logger.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/event-logger.yml)
 [![Web App CI](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/web-app-ci.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/web-app-ci.yml)
 
+Subsystems:
+[![Test API Subsystem](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-api-subsystem.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-api-subsystem.yml)
+[![Test Database Subsystem](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-database-subsystem.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-database-subsystem.yml)
 
 ADD: links to the container images for each custom subsystem, hosted on DockerHub
 
