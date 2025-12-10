@@ -3,6 +3,7 @@
 An exercise to put to practice software development teamwork, subsystem communication, containers, deployment, and CI/CD pipelines. See [instructions](./instructions.md) for details.
 
 # NYU CS & Math Course Planner
+
 A course recommender designed to help a Computer Science or Math student at NYU create a four-year plan by using an LLM to suggest courses from the CAS catalog that fulfill their requirements and classes relevant to their interests.
 
 [![log github events](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/event-logger.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/event-logger.yml)
@@ -12,9 +13,12 @@ Subsystems:
 [![Test API Subsystem](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-api-subsystem.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-api-subsystem.yml)
 [![Test Database Subsystem](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-database-subsystem.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-database-subsystem.yml)
 
-ADD: links to the container images for each custom subsystem, hosted on DockerHub
+## Container Images
+
+- **Web App**: [Docker Hub Image](https://hub.docker.com/r/apoorvib/web-app)
 
 ## Team Members
+
 - **Frontend:** [Anshu Aramandla](https://github.com/aa10150)
 - **Backend (LLM/recommendation):** [Apoorv Belgundi](https://github.com/apoorvib)
 - **Backend (CRUD operations):** [Harrison Coon](https://github.com/hoc2006-code)
@@ -22,6 +26,7 @@ ADD: links to the container images for each custom subsystem, hosted on DockerHu
 - **Docker & Integration:** [Jacob Ng](https://github.com/jng20)
 
 ## Instructions
+
 ### Environment variables
 
 Create a file at `web-app/.env` by copying `web-app/.env.example` and filling in values appropriate for your environment. Do not commit production secrets to version control — only commit `web-app/.env.example` with dummy/example values.
@@ -103,10 +108,10 @@ Stopping
 
 - If started with Docker Compose: `docker-compose down`.
 - If started locally: stop the server (Ctrl+C) and run `deactivate` to exit the virtual environment.
+
 ## Testing
 
 The `web-app` subsystem includes a comprehensive unit test suite targeting **80%+ code coverage** of core business logic.
-
 
 ### Test Suite Overview
 
