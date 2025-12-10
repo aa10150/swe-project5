@@ -23,8 +23,6 @@ class TestConnectDb:
 
     def test_connect_db_success(self):
         """Test that connect_db returns a valid database object."""
-        from mongomock import MongoClient
-
         # Use mongomock to simulate MongoDB without requiring a real instance
         client = MongoClient()
         result = client["test_db"]
@@ -38,8 +36,6 @@ class TestConnectDb:
 
     def test_connect_db_different_names(self):
         """Test that different database names return separate database instances."""
-        from mongomock import MongoClient
-
         # Use mongomock to avoid requiring a real MongoDB in CI
         client = MongoClient()
         db1 = client["db1_test"]
