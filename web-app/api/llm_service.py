@@ -60,7 +60,7 @@ def _format_course_for_prompt(course: Dict) -> str:
     """
     course_code = course.get("course_code", "Unknown")
     title = course.get("title", course.get("name", "Unknown Title"))
-    credits = course.get("credits", 0)
+    credit_hours = course.get("credits", 0)
     difficulty = course.get("difficulty", 0)
     prerequisites = course.get("prerequisites", [])
     description = course.get("description", "")
@@ -70,7 +70,7 @@ def _format_course_for_prompt(course: Dict) -> str:
     semester_str = ", ".join(semester_offered) if semester_offered else "Unknown"
 
     return f"""  - {course_code}: {title}
-    Credits: {credits} | Difficulty: {difficulty}/5
+    Credits: {credit_hours} | Difficulty: {difficulty}/5
     Prerequisites: {prereq_str}
     Offered: {semester_str}
     Description: {description[:200]}{"..." if len(description) > 200 else ""}"""

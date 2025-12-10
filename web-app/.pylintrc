@@ -20,11 +20,12 @@ disable=
     too-many-return-statements,
     too-many-arguments,
     too-many-positional-arguments,
-    too-many-local-variables,
+    too-many-locals,
     too-many-branches,
     too-many-nested-blocks,
     too-many-statements,
     too-many-lines,
+    line-too-long,
     duplicate-code,
     import-error,
     undefined-variable
