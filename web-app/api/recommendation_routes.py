@@ -158,6 +158,13 @@ def generate_recommendations():
         if not available_courses:
             # Provide more helpful error message
             total_courses = len(all_courses)
+            # Safely compute current semester's planned courses for the message
+            current_semester_planned = []
+            for plan in planned_semesters:
+                if plan.get("semester") == semester:
+                    current_semester_planned = plan.get("courses", [])
+                    break
+
             error_msg = (
                 f"No available courses found for {semester}. "
                 f"Total courses in database: {total_courses}. "
@@ -219,19 +226,22 @@ def generate_recommendations():
         )
 
         if not recommended_courses:
-            # Check if it's an API key issue
-            error_msg = "Failed to generate recommendations. "
+            # External LLM failed — return 503 Service Unavailable with guidance
             if not os.getenv("OPENAI_API_KEY"):
-                error_msg += (
-                    "OPENAI_API_KEY is not set. Please configure it in your .env file."
+                error_msg = (
+                    "Service unavailable: OPENAI_API_KEY is not configured. "
+                    "Set OPENAI_API_KEY in your environment or .env file."
                 )
+                status_code = 503
             else:
-                error_msg += (
-                    "Please check the server logs for details and try again later."
+                error_msg = (
+                    "Service unavailable: failed to generate recommendations. "
+                    "Check server logs for details."
                 )
+                status_code = 503
 
             print(f"ERROR: {error_msg}")
-            return jsonify({"error": error_msg}), 500
+            return jsonify({"error": error_msg}), status_code
 
         return jsonify({"courses": recommended_courses}), 200
 

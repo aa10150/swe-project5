@@ -174,12 +174,11 @@ def _evaluate_prerequisites(
             if logic == "and":
                 # All courses must be completed
                 return all(course_code in completed_set for course_code in courses)
-            elif logic == "or":
+            if logic == "or":
                 # Any course must be completed
                 return any(course_code in completed_set for course_code in courses)
-            else:
-                # Unknown logic, default to OR
-                return any(course_code in completed_set for course_code in courses)
+            # Unknown logic, default to OR
+            return any(course_code in completed_set for course_code in courses)
 
     # Unknown structure, default to False
     return False
@@ -220,9 +219,9 @@ def _extract_semester_type(semester_name: str) -> Optional[str]:
 
     if "fall" in semester_name_lower:
         return "Fall"
-    elif "spring" in semester_name_lower:
+    if "spring" in semester_name_lower:
         return "Spring"
-    elif "summer" in semester_name_lower:
+    if "summer" in semester_name_lower:
         return "Summer"
 
     return None
@@ -362,7 +361,7 @@ def get_available_courses_for_semester(
 
     # Debug: Check if database is empty
     if not all_courses:
-        print(f"WARNING: No courses found in database. Make sure database is seeded.")
+        print("WARNING: No courses found in database. Make sure database is seeded.")
         return []
 
     # Step 1: Filter out completed courses

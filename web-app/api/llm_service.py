@@ -8,7 +8,7 @@ import json
 import os
 from typing import Dict, List, Optional
 
-from openai import OpenAI
+from openai import OpenAI  # pyright: ignore[reportMissingImports]
 
 
 # Initialize OpenAI client
@@ -34,8 +34,8 @@ def _build_system_message() -> str:
     Returns:
         System message string defining the role and context
     """
-    return """You are an expert academic advisor at NYU specializing in course planning and 
-curriculum design. Your role is to help students create balanced, strategic course schedules 
+    return """You are an expert academic advisor at NYU specializing in course planning and
+curriculum design. Your role is to help students create balanced, strategic course schedules
 that align with their academic goals, career aspirations, and major requirements.
 
 You understand:
@@ -60,7 +60,7 @@ def _format_course_for_prompt(course: Dict) -> str:
     """
     course_code = course.get("course_code", "Unknown")
     title = course.get("title", course.get("name", "Unknown Title"))
-    credits = course.get("credits", 0)
+    credit_hours = course.get("credits", 0)
     difficulty = course.get("difficulty", 0)
     prerequisites = course.get("prerequisites", [])
     description = course.get("description", "")
@@ -70,7 +70,7 @@ def _format_course_for_prompt(course: Dict) -> str:
     semester_str = ", ".join(semester_offered) if semester_offered else "Unknown"
 
     return f"""  - {course_code}: {title}
-    Credits: {credits} | Difficulty: {difficulty}/5
+    Credits: {credit_hours} | Difficulty: {difficulty}/5
     Prerequisites: {prereq_str}
     Offered: {semester_str}
     Description: {description[:200]}{"..." if len(description) > 200 else ""}"""
@@ -294,16 +294,45 @@ def generate_course_recommendations(
         # gpt-4 (base) does NOT support JSON mode
         model = os.getenv("OPENAI_MODEL", "gpt-4-turbo")
 
-        # Call OpenAI API
-        response = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": system_message},
-                {"role": "user", "content": user_message},
-            ],
-            response_format={"type": "json_object"},
-            temperature=0.7,  # Balance between creativity and consistency
-        )
+        # Call OpenAI API (catch authentication errors explicitly so we don't
+        # crash the app and so we can log a clear, non-secret-bearing message)
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": user_message},
+                ],
+                response_format={"type": "json_object"},
+                temperature=0.7,  # Balance between creativity and consistency
+            )
+        except Exception as e:
+            # Some openai SDK versions expose AuthenticationError differently.
+            # Avoid referencing openai.error to prevent AttributeError in
+            # environments where that attribute is missing. Inspect the
+            # exception name/message for authentication failures instead
+            # and log a concise non-secret-bearing message.
+            exc_name = type(e).__name__ or ""
+            exc_text = str(e).lower()
+            is_auth_error = (
+                "authentication" in exc_name.lower()
+                or "invalid_api_key" in exc_text
+                or "invalid api key" in exc_text
+                or "401" in exc_text
+            )
+
+            if is_auth_error:
+                print(
+                    "ERROR: OpenAI authentication failed — invalid API key. "
+                    "Set a valid OPENAI_API_KEY in your environment or .env file."
+                )
+                return None
+
+            # Avoid printing the full exception which may contain sensitive
+            # information (like an API key). Truncate the message.
+            msg = str(e)
+            print(f"ERROR calling OpenAI API: {exc_name}: {msg[:200]}")
+            return None
 
         # Extract response content
         response_content = response.choices[0].message.content
