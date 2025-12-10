@@ -37,9 +37,13 @@ class TestConnectDb:
         """Test connecting to database with different name."""
         from database.app_db import connect_db
 
-        # Use valid MongoDB URI
-        db1 = connect_db("mongodb://localhost:27017", "db1")
-        db2 = connect_db("mongodb://localhost:27017", "db2")
+        # Use unique database names to avoid conflicts with previous test runs
+        db1 = connect_db("mongodb://localhost:27017", "db1_test_unique")
+        db2 = connect_db("mongodb://localhost:27017", "db2_test_unique")
+
+        # Clean up any existing data first
+        db1.students.drop()
+        db2.students.drop()
 
         # Insert into db1
         db1.students.insert_one({"email": "test@nyu.edu", "name": "Test"})
@@ -47,6 +51,11 @@ class TestConnectDb:
         # db2 should be empty (different database)
         assert db1.students.count_documents({}) == 1
         assert db2.students.count_documents({}) == 0
+
+        # Clean up after test
+        client = db1.client
+        client.drop_database("db1_test_unique")
+        client.drop_database("db2_test_unique")
 
 
 class TestCreateIndexes:
