@@ -168,16 +168,39 @@ STUDENT PROFILE:
     if len(available_courses) > 50:
         message += f"\n... and {len(available_courses) - 50} more courses available.\n"
 
-    # Instructions section
+    # Instructions section - REORDERED AND EMPHASIZED
     message += f"""
-RECOMMENDATION REQUIREMENTS:
-1. Recommend 4-6 courses (aim for {target_credits_min}-{target_credits_max} total credits)
-2. Balance difficulty: Mix easy (1-2), medium (3), and challenging (4-5) courses
-3. Prioritize remaining core requirements if applicable
-4. Align with career path: {career_path if career_path else "general academic growth"}
-5. Consider side interests: {", ".join(side_interests) if side_interests else "none specified"}
-6. Ensure all prerequisites are satisfied (already filtered, but double-check)
-7. Consider course sequencing and logical progression
+CRITICAL RECOMMENDATION PRIORITIES (in order of importance):
+1. CAREER PATH ALIGNMENT (HIGHEST PRIORITY): 
+   The student's intended career path is: "{career_path if career_path else "Not specified"}"
+   Strongly prioritize courses that directly support this career path.
+   For example:
+   - If career path is "Software Engineering", prioritize: Software Engineering, Web Development, 
+     Database Design, Agile/DevOps, Applied Internet Technology, etc.
+   - If career path is "AI/ML" or "Machine Learning", prioritize: Predictive Analytics, 
+     Data Management, Big Data Processing, etc.
+   - If career path is "Data Science", prioritize: Database Design, Predictive Analytics, 
+     Data Management, Probability and Statistics, etc.
+   - If career path is "Systems", prioritize: Operating Systems, Computer Systems Organization, 
+     Theory of Computation, etc.
+   - If career path is "Cybersecurity", prioritize: Introduction to Cryptography, etc.
+   DO NOT recommend generic courses when career-specific courses are available.
+
+2. SIDE INTERESTS (HIGH PRIORITY):
+   The student has expressed interest in: {", ".join(side_interests) if side_interests else "none specified"}
+   Include 1-2 courses that align with these side interests to create a well-rounded schedule.
+   This helps the student explore their interests while maintaining focus on their major.
+   If side interests are specified, make sure at least one recommended course connects to them.
+
+3. Major Requirements: Prioritize remaining core requirements if applicable
+4. Difficulty Balance: Mix easy (1-2), medium (3), and challenging (4-5) courses
+5. Course Sequencing: Ensure logical progression and prerequisite satisfaction
+
+IMPORTANT CONSTRAINTS:
+- DO NOT recommend courses the student has already completed: {", ".join(completed_courses) if completed_courses else "None"}
+- DO NOT recommend courses already planned for this semester
+- Recommend 4-6 courses (aim for {target_credits_min}-{target_credits_max} total credits)
+- All prerequisites are already satisfied (already filtered, but double-check)
 
 RESPONSE FORMAT:
 Return a JSON object with this structure:
@@ -187,14 +210,14 @@ Return a JSON object with this structure:
       "course_code": "CSCI-UA.0101",
       "title": "Introduction to Computer Science",
       "credits": 4,
-      "reasoning": "Brief explanation of why this course is recommended"
+      "reasoning": "Brief explanation that specifically mentions how this course aligns with the career path '{career_path if career_path else "academic goals"}' and/or side interests {side_interests if side_interests else "general academic growth"}"
     }},
     ...
   ]
 }}
 
-Provide thoughtful reasoning for each recommendation that considers the student's goals, 
-progress, and the course's role in their academic journey."""
+Provide thoughtful reasoning for each recommendation that explicitly connects the course to the student's career path and interests. 
+Each reasoning should clearly state WHY this course is relevant to their career goals and how it fits into their academic journey."""
 
     return message
 

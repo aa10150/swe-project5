@@ -114,17 +114,42 @@ def generate_recommendations():
 
         # Get user data
         completed_courses = user.get("completed_courses", [])
+        planned_semesters = user.get("planned_semesters", [])
         major = user.get("major", "")
         year = user.get("year", "")
         interests = user.get("interests", [])
         name = user.get("name", "Student")
 
+        # Also exclude courses already planned for this semester
+        current_semester_planned = []
+        for plan in planned_semesters:
+            if plan.get("semester") == semester:
+                planned_courses = plan.get("courses", [])
+                # Extract course codes from planned courses
+                for course in planned_courses:
+                    if isinstance(course, dict):
+                        course_code = course.get("course_code", "")
+                        if course_code:
+                            current_semester_planned.append(course_code)
+                    elif isinstance(course, str):
+                        # Parse course code from string like "CSCI-UA.0101 Intro to CS (4 credits)"
+                        parts = course.split()
+                        if parts:
+                            current_semester_planned.append(parts[0])
+
+        # Combine completed and planned courses for filtering
+        all_excluded_courses = list(set(completed_courses + current_semester_planned))
+
+        print(
+            f"DEBUG: Excluding {len(completed_courses)} completed courses and {len(current_semester_planned)} planned courses for {semester}"
+        )
+
         # Get all courses from database
         all_courses = course_filtering.get_all_courses_from_db()
 
-        # Get available courses for the semester
+        # Get available courses for the semester (exclude both completed and planned)
         available_courses = course_filtering.get_available_courses_for_semester(
-            completed_courses=completed_courses,
+            completed_courses=all_excluded_courses,
             target_semester=semester,
             all_courses=all_courses,
             major_name=major if major else None,
@@ -136,14 +161,16 @@ def generate_recommendations():
             error_msg = (
                 f"No available courses found for {semester}. "
                 f"Total courses in database: {total_courses}. "
-                f"Completed courses: {len(completed_courses)}. "
+                f"Completed courses: {len(completed_courses)}, "
+                f"Planned courses for this semester: {len(current_semester_planned)}. "
             )
             if total_courses == 0:
                 error_msg += "Database appears to be empty. Please ensure the database is seeded."
             else:
                 error_msg += (
                     "This may be because: (1) all available courses have prerequisites you haven't met, "
-                    "(2) no courses are offered in this semester, or (3) you've completed all available courses."
+                    "(2) no courses are offered in this semester, (3) you've completed all available courses, "
+                    "or (4) you've already planned all available courses for this semester."
                 )
 
             print(f"WARNING: {error_msg}")
@@ -157,10 +184,10 @@ def generate_recommendations():
         if major:
             major_reqs = major_requirements.get_major_requirements(major)
             major_progress = major_requirements.get_major_progress(
-                major, completed_courses, all_courses
+                major, all_excluded_courses, all_courses
             )
             remaining_reqs = major_requirements.get_remaining_requirements(
-                major, completed_courses, all_courses
+                major, all_excluded_courses, all_courses
             )
 
         # Build student info
@@ -168,7 +195,7 @@ def generate_recommendations():
             "name": name,
             "major": major,
             "year": year,
-            "completed_courses": completed_courses,
+            "completed_courses": all_excluded_courses,  # Include both completed and planned
             "interests": interests,
             "career_path": career_path,
             "side_interests": side_interests,
