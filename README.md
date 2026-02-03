@@ -6,7 +6,7 @@ An exercise to put to practice software development teamwork, subsystem communic
 
 A course recommender designed to help a Computer Science or Math student at NYU create a four-year plan by using an LLM to suggest courses from the CAS catalog that fulfill their requirements and classes relevant to their interests.
 
-**🚀 Live Deployment:** [http://159.65.190.132:5000/](http://159.65.190.132:5000/)
+**Live Deployment:** [http://159.65.190.132:5000/](http://159.65.190.132:5000/)
 
 [![log github events](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/event-logger.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/event-logger.yml)
 [![Web App Subsystem CI](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-api-subsystem.yml/badge.svg)](https://github.com/swe-students-fall2025/5-final-famous-amoses/actions/workflows/test-api-subsystem.yml)
